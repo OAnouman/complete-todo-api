@@ -1,0 +1,23 @@
+{
+
+    "test": {
+
+        "MONGODB_URI": "",
+
+        "JWT_SECRET": "",
+
+        "PORT": 3000
+
+    },
+
+    "development": {
+
+        "MONGODB_URI": "",
+
+        "JWT_SECRET": "",
+
+        "PORT": 3000
+
+    }
+
+}
