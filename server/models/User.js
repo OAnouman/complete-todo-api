@@ -152,9 +152,9 @@ UserSchema.methods.generateAuthToken = function() {
  * 
  * @returns {Promise}
  */
-UserSchema.methods.removeToken = function() {
+UserSchema.methods.removeToken = function(token) {
 
-    // Retreieve user
+    // Retrieve user
 
     let user = this;
 
@@ -163,13 +163,12 @@ UserSchema.methods.removeToken = function() {
     return user.update({
 
         $pull: {
-            token
+            tokens: { token }
         }
 
-    })
+    });
 
 };
-
 
 
 UserSchema.methods.toJSON = function() {
@@ -234,25 +233,21 @@ UserSchema.statics.findByCredentials = function(credentials) {
 
             email: credentials.email,
 
-        }).or({
-
-            username: credentials.username,
-
         })
         .then(user => {
 
             if (!user) return Promise.reject();
 
-            return bcrypt.compare(credentials.password, user.password);
+            return bcrypt.compare(credentials.password, user.password)
+                .then(isEqual => {
 
-        })
-        .then(isEqual => {
+                    if (isEqual) {
+                        return Promise.resolve(user);
+                    } else {
+                        return Promise.reject();
+                    }
 
-            if (isEqual) {
-                return Promise.resolve(user);
-            } else {
-                return Promise.reject();
-            }
+                });
 
         });
 

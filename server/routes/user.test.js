@@ -185,6 +185,31 @@ describe('POST /users', () => {
 
 });
 
+
+describe('POST /users/login', () => {
+
+    it('Should return user matching valid credentials and add x-auth token to header', (done) => {
+
+        let creds = { email: users[0].email, password: users[0].password };
+
+        request(app)
+            .post('/users/login')
+            .send(creds)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.headers['x-auth']).toExist();
+
+                expect(res.body.user.email).toBe(creds.email);
+
+                expect(res.body.user._id).toBe(users[0]._id.toHexString());
+
+            })
+            .end(done);
+
+    })
+})
+
 describe('GET /users/me', () => {
 
     it('Should return 401 if auth token is missing from header', (done) => {
@@ -215,3 +240,34 @@ describe('GET /users/me', () => {
 
 
 })
+
+describe('DELETE /users/logout', () => {
+
+    it('Should remove auth token and logout user', (done) => {
+
+        request(app)
+            .delete('/users/logout')
+            .set('x-auth', users[1].tokens[0].token)
+            .expect(200)
+            .end((err, res) => {
+
+                if (err) return done(err);
+
+                User.findOne({ _id: users[1]._id })
+                    .then(user => {
+
+                        if (!user) return done(err);
+
+                        expect(user.tokens.length).toBe(0);
+
+                        done();
+
+                    })
+                    .catch(e => done(e));
+
+            });
+
+    });
+
+
+});
