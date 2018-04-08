@@ -18,8 +18,11 @@ const app = express();
 
 
 
+/************************************** 
+            DATABASE
+***************************************/
 
-
+require('./db/mongoose');
 
 
 
@@ -28,6 +31,8 @@ const app = express();
 ***************************************/
 
 app.use(bodyParser.json());
+
+app.use('/users', require('./routes/user'));
 
 
 
@@ -49,7 +54,7 @@ app.use(bodyParser.json());
 
 app.all('/', (req, res) => {
 
-    res.send('Blog API');
+    res.send({ res: 'Blog API' });
 
 });
 

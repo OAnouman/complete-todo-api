@@ -2,9 +2,9 @@
 
     "test": {
 
-        "MONGODB_URI": "",
+        "MONGODB_URI": "mongodb://localhost:27017/BlogTest",
 
-        "JWT_SECRET": "",
+        "JWT_SECRET": "ukfhxbhbwihakamqdcbvjw654154",
 
         "PORT": 3000
 
@@ -12,9 +12,9 @@
 
     "development": {
 
-        "MONGODB_URI": "",
+        "MONGODB_URI": "mongodb://localhost:27017/Blog",
 
-        "JWT_SECRET": "",
+        "JWT_SECRET": "kjnwcs52v4x6swv5s4w2f368rz7fq",
 
         "PORT": 3000
 
