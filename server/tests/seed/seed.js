@@ -45,7 +45,7 @@ let users = [{
 
     _id: userTwoId,
 
-    email: 'manouman@live.fr',
+    email: 'dekadooulai@live.fr',
 
     username: 'dek@do',
 

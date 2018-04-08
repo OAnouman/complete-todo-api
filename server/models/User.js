@@ -39,7 +39,7 @@ let UserSchema = new mongoose.Schema({
 
         trim: true,
 
-        unqiue: [true, 'This email address already exists'],
+        unique: [true, 'This email address already exists'],
 
         validate: {
 
