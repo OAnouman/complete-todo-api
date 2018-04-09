@@ -6,6 +6,8 @@ const { ObjectID } = require('mongodb');
 
 const jwt = require('jsonwebtoken');
 
+const faker = require('faker');
+
 
 
 
@@ -14,6 +16,8 @@ const jwt = require('jsonwebtoken');
 ***************************************/
 
 const { User } = require('./../../models/User');
+
+const { Post } = require('./../../models/Post');
 
 
 
@@ -57,7 +61,36 @@ let users = [{
         access: 'auth',
     }],
 
-}]
+}];
+
+
+let posts = [{
+    title: faker.lorem.words,
+
+    body: faker.lorem.paragraphs(),
+
+    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
+
+    _creator: userOneId,
+}, {
+    title: faker.lorem.words,
+
+    body: faker.lorem.paragraphs(),
+
+    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
+
+    _creator: userOneId,
+
+}, {
+    title: faker.lorem.words,
+
+    body: faker.lorem.paragraphs(),
+
+    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
+
+    _creator: userTwoId,
+
+}];
 
 
 let wipeUsers = () => {
@@ -65,6 +98,13 @@ let wipeUsers = () => {
     return User.remove({});
 
 }
+
+
+let wipePost = () => {
+
+    return Post.remove({});
+
+};
 
 let populateUsers = (done) => {
 
@@ -88,8 +128,21 @@ let populateUsers = (done) => {
 }
 
 
+let populatePosts = (done) => {
+
+
+    wipePost()
+        .then(() => {
+
+            return Post.insertMany(posts);
+
+        })
+        .then(posts => done())
+        .catch(e => done(e))
+
+}
 
 
 
 
-module.exports = { populateUsers, users };
+module.exports = { populateUsers, users, populatePosts, posts };

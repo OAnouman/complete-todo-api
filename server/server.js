@@ -32,8 +32,13 @@ require('./db/mongoose');
 
 app.use(bodyParser.json());
 
+// User route module
+
 app.use('/users', require('./routes/user'));
 
+// Post route module
+
+app.use('/posts', require('./routes/post'));
 
 
 

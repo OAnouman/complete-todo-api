@@ -36,6 +36,15 @@ const Router = express.Router();
 
 Router.post('/', (req, res) => {
 
+    // If no data passed in req 
+
+    if (!req.body) {
+
+        res.sendStatus(400);
+
+    }
+
+
     /*
      * Extract only require data from
      * request to be sure to ignore extra 
