@@ -110,6 +110,7 @@ PostSchema.statics.findByCreator = function(id) {
             _creator: id
 
         });
+
     } else {
 
         return Promise.reject(new Error('The given id is not valid'));

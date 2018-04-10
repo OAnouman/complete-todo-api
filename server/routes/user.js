@@ -34,7 +34,7 @@ const Router = express.Router();
             USER'S ROUTES
 ***************************************/
 
-Router.post('/', (req, res) => {
+Router.post('/', async(req, res) => {
 
     // If no data passed in req 
 
@@ -55,75 +55,91 @@ Router.post('/', (req, res) => {
 
     let user = new User(body);
 
-    user.save()
-        .then(() => user.generateAuthToken())
-        .then(token => {
+    try {
 
-            res.header('x-auth', token).send({ user })
+        await user.save();
 
-        })
-        .catch(e => res.status(400).send({
-            error: {
-                code: e.code,
-                message: e.errmsg,
-            }
-        }))
+        let token = await user.generateAuthToken();
+
+        res.header('x-auth', token).send({ user })
+
+    } catch (e) {
+
+        res.status(400)
+            .send({
+                    error: {
+                        code: e.code,
+                        message: e.errmsg,
+                    }
+                }
+
+            )
+    }
+
 
 });
 
-Router.post('/login', (req, res) => {
+Router.post('/login', async(req, res) => {
 
     // Extract only needed infos
 
-    let credentials = _.pick(req.body, ['email', 'password']);
+    const credentials = _.pick(req.body, ['email', 'password']);
 
-    User.findByCredentials(credentials)
-        .then(user => {
+    try {
 
-            if (!user) return Promise.reject();
+        let user = await User.findByCredentials(credentials);
 
-            return user.generateAuthToken()
-                .then(token => {
+        if (!user) throw new Error();
 
-                    res.header('x-auth', token)
-                        .send({ user });
+        let token = await user.generateAuthToken();
 
-                });
+        res.header('x-auth', token).send({ user });
 
-        })
-        .catch(e => res.sendStatus(404));
+    } catch (e) {
+
+        res.sendStatus(404);
+
+    }
 
 });
 
-Router.get('/me', authenticate, (req, res) => {
+Router.get('/me', authenticate, async(req, res) => {
 
     // Retrieve token from request 
 
-    let token = req.header('x-auth');
+    const token = req.header('x-auth');
 
-    User.findByToken(token)
-        .then(user => {
+    try {
 
-            if (!user) return Promise.reject();
+        const user = await User.findByToken(token);
 
-            res.send({ user });
+        if (!user) throw new Error();
 
-        })
-        .catch(e => res.status(400).send({ e }));
+        res.send({ user });
+
+    } catch (e) {
+
+        res.status(400).send({ e })
+
+    }
 
 });
 
-Router.delete('/logout', authenticate, (req, res) => {
+Router.delete('/logout', authenticate, async(req, res) => {
 
-    let user = req.user;
+    const user = req.user;
 
-    user.removeToken(req.token)
-        .then(() => {
+    try {
 
-            res.sendStatus(200);
+        await user.removeToken(req.token)
 
-        })
-        .catch(e => res.sendStatus(400));
+        res.sendStatus(200);
+
+    } catch (e) {
+
+        res.sendStatus(400)
+
+    }
 
 });
 

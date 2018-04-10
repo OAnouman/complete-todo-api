@@ -35,7 +35,7 @@ const Router = express.Router();
 ***************************************/
 
 
-Router.post('/', authenticate, (req, res) => {
+Router.post('/', authenticate, async(req, res) => {
 
 
     // If no data passed in req 
@@ -61,8 +61,6 @@ Router.post('/', authenticate, (req, res) => {
 
         post.tags = _.split(post.tags, ',');
 
-        console.log(post.tags);
-
     } else if (!Array.isArray(post.tags) && typeof post.tags !== 'string') {
 
         /*
@@ -73,15 +71,17 @@ Router.post('/', authenticate, (req, res) => {
 
     }
 
-    post.save()
-        .then(() => {
+    try {
 
-            res.send({ post });
+        await post.save();
 
+        res.send({ post });
 
-        })
-        .catch(err => res.status(400).send({ err }));
+    } catch (e) {
 
+        res.status(400).send({ e })
+
+    }
 
 });
 
