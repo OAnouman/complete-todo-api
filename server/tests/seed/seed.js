@@ -65,28 +65,38 @@ let users = [{
 
 
 let posts = [{
-    title: faker.lorem.words,
+
+    _id: new ObjectID(),
+
+    title: faker.lorem.words(),
 
     body: faker.lorem.paragraphs(),
 
-    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
-
-    _creator: userOneId,
-}, {
-    title: faker.lorem.words,
-
-    body: faker.lorem.paragraphs(),
-
-    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
+    tags: [faker.lorem.slug(2), faker.lorem.slug(2), faker.lorem.slug(2)],
 
     _creator: userOneId,
 
 }, {
-    title: faker.lorem.words,
+
+    _id: new ObjectID(),
+
+    title: faker.lorem.words(),
 
     body: faker.lorem.paragraphs(),
 
-    tags: [faker.lorem.slug(5), faker.lorem.slug(5), faker.lorem.slug(5)],
+    tags: [faker.lorem.slug(2), faker.lorem.slug(2), faker.lorem.slug(2)],
+
+    _creator: userOneId,
+
+}, {
+
+    _id: new ObjectID(),
+
+    title: faker.lorem.words(),
+
+    body: faker.lorem.paragraphs(),
+
+    tags: [faker.lorem.slug(2), faker.lorem.slug(2), faker.lorem.slug(2)],
 
     _creator: userTwoId,
 

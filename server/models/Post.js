@@ -86,11 +86,22 @@ let PostSchema = new mongoose.Schema({
 
 });
 
+/**************************************
+ * Document methods
+ */
+
+PostSchema.methods.toJSON = function() {
+
+    let post = this.toObject();
+
+    return _.pick(post, ['_id', 'title', 'body', 'lastModified', 'tags', 'createdAt'])
+
+}
+
 
 /**************************************
  * Statics methods
  */
-
 
 
 /**
@@ -147,6 +158,26 @@ PostSchema.statics.findByTag = function(tag) {
 
 };
 
+
+
+
+/************************************
+ *  HOOKS
+ */
+
+let preUpdateHook = function(next) {
+
+    /*
+     * Update lastModified before 
+     * the document i updated
+     */
+    this._update.$set.lastModified = Date.now();
+
+    next();
+
+}
+
+PostSchema.pre('findOneAndUpdate', preUpdateHook);
 
 
 /**************************************

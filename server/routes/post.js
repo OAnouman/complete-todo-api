@@ -6,6 +6,8 @@ const express = require('express');
 
 const _ = require('lodash');
 
+const { ObjectID } = require('mongodb');
+
 
 /************************************** 
             LOCALS IMPORTS
@@ -85,7 +87,44 @@ Router.post('/', authenticate, async(req, res) => {
 
 });
 
+Router.patch('/:id', authenticate, async(req, res) => {
 
+    let post = _.pick(req.body, ['title', 'body', 'tags']);
+
+    if (!req.params.id || !ObjectID.isValid(req.params.id) || Object.keys(post).length <= 0) {
+
+        return res.sendStatus(400);
+
+    }
+
+    try {
+
+        let updatedPost = await Post.findOneAndUpdate({
+
+            _id: req.params.id,
+
+            _creator: req.user._id
+
+        }, {
+            $set: {
+                title: post.title,
+                body: post.body
+            },
+            $addToSet: {
+                tags: post.tags,
+            }
+        }, { new: true, runValidators: true });
+
+        if (!updatedPost) throw new Error()
+
+        res.send({ post: updatedPost });
+
+    } catch (e) {
+
+        res.sendStatus(404);
+    }
+
+});
 
 
 module.exports = Router;

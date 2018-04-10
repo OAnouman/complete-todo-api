@@ -196,3 +196,66 @@ describe('POST /posts', () => {
 
 
 });
+
+describe('POST /posts/id', () => {
+
+    it('Should update post and update lastModified property', (done) => {
+
+        const post = { title: 'Updated title', body: 'A new body', tags: ['updated'] };
+
+        request(app)
+            .patch(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[0].tokens[0].token)
+            .send(post)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.body.post._id).toBe(posts[0]._id.toHexString());
+
+                expect(res.body.post.lastModified).toNotBe(null);
+
+            })
+            .end(done);
+
+    });
+
+    it('Should not update post if post contains invalid data', (done) => {
+
+        const post = { title: 'Updated title', body: '', tags: ['up'] };
+
+        request(app)
+            .patch(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[0].tokens[0].token)
+            .send(post)
+            .expect(404)
+            .end(done);
+
+    });
+
+    it('Should return 400 if id is not valid', (done) => {
+
+        const post = { title: 'Updated title', body: '', tags: ['up'] };
+
+        request(app)
+            .patch(`/posts/123`)
+            .set('x-auth', users[0].tokens[0].token)
+            .send(post)
+            .expect(400)
+            .end(done);
+
+    });
+
+    it('Should return 404 if user is not allowed to update post', (done) => {
+
+        const post = { title: 'Updated title', body: '', tags: ['up'] };
+
+        request(app)
+            .patch(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[1].tokens[0].token)
+            .send(post)
+            .expect(404)
+            .end(done);
+
+    });
+
+});

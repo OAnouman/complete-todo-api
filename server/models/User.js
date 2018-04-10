@@ -255,6 +255,12 @@ UserSchema.statics.findByCredentials = function(credentials) {
 
 
 
+/************************************
+ * HOOKS
+ */
+
+
+
 /**
  * Hash password just before
  * create user
@@ -262,26 +268,29 @@ UserSchema.statics.findByCredentials = function(credentials) {
  * @param {any} next
  * 
  */
-let preSaveHook = function(next) {
+let preSaveHook = async function(next, done) {
 
     let user = this;
 
     if (user.isModified('password')) {
 
-        bcrypt.genSalt(10)
-            .then(salt => {
+        try {
 
-                return bcrypt.hash(user.password, salt);
+            const salt = await bcrypt.genSalt(10);
 
-            })
-            .then(hash => {
+            const hash = await bcrypt.hash(user.password, salt);
 
-                user.password = hash;
+            user.password = hash;
 
-                next();
+            next();
 
-            })
-            .catch(() => {});
+        } catch (e) {
+
+            done(e);
+
+        }
+
+
     } else {
 
         next();
