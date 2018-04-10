@@ -259,3 +259,89 @@ describe('POST /posts/id', () => {
     });
 
 });
+
+describe('GET /posts', () => {
+
+    it('Should return an array of two posts', (done) => {
+
+        request(app)
+            .get('/posts')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.body.posts.length).toBe(2);
+
+                expect(res.body.posts[0].title).toBe(posts[0].title);
+
+            })
+            .end(done);
+
+    });
+
+    it('Should return a empty array if user as no post', (done) => {
+
+        request(app)
+            .get('/posts')
+            .set('x-auth', users[2].tokens[0].token)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.body.posts.length).toBe(0);
+
+            })
+            .end(done);
+
+    });
+
+    it('Should return 404 if user not authenticated', (done) => {
+
+        request(app)
+            .get('/posts')
+            .expect(401)
+            .end(done);
+
+    });
+
+});
+
+describe('GET /posts/:id', () => {
+
+    it('Should return a post matching the given id', (done) => {
+
+        request(app)
+            .get(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.body.post._id).toBe(posts[0]._id.toHexString());
+
+                expect(res.body.post.title).toBe(posts[0].title);
+
+            })
+            .end(done);
+
+    });
+
+    it('Should return a 404 if user is not the owner of the requested post', (done) => {
+
+        request(app)
+            .get(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[1].tokens[0].token)
+            .expect(404)
+            .end(done);
+
+    });
+
+    it('Should return a 400 if id is not valid', (done) => {
+
+        request(app)
+            .get(`/posts/123`)
+            .set('x-auth', users[1].tokens[0].token)
+            .expect(400)
+            .end(done);
+
+    });
+
+});

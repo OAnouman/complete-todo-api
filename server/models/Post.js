@@ -76,6 +76,15 @@ let PostSchema = new mongoose.Schema({
 
     }],
 
+    author: {
+
+        type: String,
+
+        required: true,
+
+        trim: true,
+    },
+
     _creator: {
 
         type: mongoose.Schema.Types.ObjectId,
@@ -83,6 +92,8 @@ let PostSchema = new mongoose.Schema({
         required: true,
 
     }
+
+
 
 });
 

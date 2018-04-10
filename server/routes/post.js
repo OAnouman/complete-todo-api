@@ -53,6 +53,8 @@ Router.post('/', authenticate, async(req, res) => {
 
     post._creator = req.user._id;
 
+    post.author = req.user.username;
+
     /*
      * Check if tags are passed as array 
      * or comma separated string. If string
@@ -125,6 +127,54 @@ Router.patch('/:id', authenticate, async(req, res) => {
     }
 
 });
+
+Router.get('/', authenticate, async(req, res) => {
+
+    try {
+
+        let posts = await Post.find({
+            _creator: req.user._id
+        });
+
+        res.send({ posts })
+
+    } catch (e) {
+
+        res.sendStatus(400);
+
+    }
+
+});
+
+Router.get('/:id', authenticate, async(req, res) => {
+
+    if (!req.params.id || !ObjectID.isValid(req.params.id)) {
+
+        return res.sendStatus(400);
+
+    }
+
+    try {
+
+        let post = await Post.findOne({
+
+            _id: req.params.id,
+
+            _creator: req.user._id,
+
+        });
+
+        if (!post) throw new Error();
+
+        res.send({ post });
+
+    } catch (e) {
+
+        res.sendStatus(404);
+
+    }
+
+})
 
 
 module.exports = Router;

@@ -97,7 +97,7 @@ describe('POST /users', () => {
 
                         }
 
-                        expect(us.length).toBe(2);
+                        expect(us.length).toBe(3);
 
                         done();
 
@@ -135,7 +135,7 @@ describe('POST /users', () => {
 
                         }
 
-                        expect(us.length).toBe(2);
+                        expect(us.length).toBe(3);
 
                         done();
 
@@ -172,7 +172,7 @@ describe('POST /users', () => {
 
                         }
 
-                        expect(us.length).toBe(2);
+                        expect(us.length).toBe(3);
 
                         done();
 

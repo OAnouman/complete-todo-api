@@ -25,9 +25,11 @@ const { Post } = require('./../../models/Post');
            DUMMIES DATAS
 ***************************************/
 
-let userOneId = new ObjectID();
+const userOneId = new ObjectID();
 
-let userTwoId = new ObjectID();
+const userTwoId = new ObjectID();
+
+const userThreeId = new ObjectID();
 
 let users = [{
 
@@ -61,6 +63,21 @@ let users = [{
         access: 'auth',
     }],
 
+}, {
+
+    _id: userThreeId,
+
+    email: 'marcellin_anouman@live.fr',
+
+    username: 'M@rcellin',
+
+    password: 'azADkj89',
+
+    tokens: [{
+        token: jwt.sign({ _id: userThreeId.toHexString(), access: 'auth' }, process.env.JWT_SECRET).toString(),
+
+        access: 'auth',
+    }],
 }];
 
 
@@ -76,6 +93,8 @@ let posts = [{
 
     _creator: userOneId,
 
+    author: users[0].username,
+
 }, {
 
     _id: new ObjectID(),
@@ -88,6 +107,8 @@ let posts = [{
 
     _creator: userOneId,
 
+    author: users[0].username,
+
 }, {
 
     _id: new ObjectID(),
@@ -99,6 +120,8 @@ let posts = [{
     tags: [faker.lorem.slug(2), faker.lorem.slug(2), faker.lorem.slug(2)],
 
     _creator: userTwoId,
+
+    author: users[1].username,
 
 }];
 
@@ -125,7 +148,9 @@ let populateUsers = (done) => {
 
             let userTwo = new User(users[1]).save();
 
-            return Promise.all([userOne, userTwo]);
+            let userThree = new User(users[2]).save();
+
+            return Promise.all([userOne, userTwo, userThree]);
 
         })
         .then(() => {
