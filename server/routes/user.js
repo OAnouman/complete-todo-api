@@ -93,7 +93,7 @@ Router.post('/login', async(req, res) => {
 
         let token = await user.generateAuthToken();
 
-        res.header('x-auth', token).send({ user });
+        res.header('x-auth', token).send({ user, token });
 
     } catch (e) {
 
