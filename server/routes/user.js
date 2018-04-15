@@ -57,6 +57,8 @@ Router.post('/', async(req, res) => {
 
     try {
 
+        console.log('Before saving');
+
         await user.save();
 
         let token = await user.generateAuthToken();
