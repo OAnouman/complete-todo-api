@@ -57,13 +57,9 @@ Router.post('/', async(req, res) => {
 
     try {
 
-        console.log('Before saving');
-
         await user.save();
 
         let token = await user.generateAuthToken();
-
-        console.log(token);
 
         res.header('x-auth', token).send({ user });
 
