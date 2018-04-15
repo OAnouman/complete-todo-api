@@ -276,16 +276,12 @@ let preSaveHook = async function(next, done) {
 
         try {
 
-            console.log('Salt');
             let salt = await bcrypt.genSalt(10);
 
-            console.log('Hash');
             let hash = await bcrypt.hash(user.password, salt);
 
-            console.log('Send');
             user.password = hash;
 
-            console.log('Next');
             next();
 
         } catch (e) {
