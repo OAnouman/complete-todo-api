@@ -133,12 +133,14 @@ UserSchema.methods.generateAuthToken = function() {
      * array 
      */
 
+    console.log('jwt');
     let token = jwt.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET).toString();
 
+    console.log('push');
     user.tokens.push({ token, access });
 
     // Save user and return a Promise.resolve 
-
+    console.log('re-save');
     return user.save()
         .then(() => token);
 
