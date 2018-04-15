@@ -132,9 +132,7 @@ Router.get('/', authenticate, async(req, res) => {
 
     try {
 
-        let posts = await Post.find({
-            _creator: req.user._id
-        });
+        let posts = await Post.find();
 
         res.send({ posts })
 
@@ -158,9 +156,7 @@ Router.get('/:id', authenticate, async(req, res) => {
 
         let post = await Post.findOne({
 
-            _id: req.params.id,
-
-            _creator: req.user._id,
+            _id: req.params.id
 
         });
 
@@ -174,7 +170,36 @@ Router.get('/:id', authenticate, async(req, res) => {
 
     }
 
-})
+});
+
+Router.delete('/:id', authenticate, async(req, res) => {
+
+    if (!req.params.id || !ObjectID.isValid(req.params.id)) {
+
+        return res.sendStatus(400);
+
+    }
+
+    try {
+
+        let post = await Post.findOneAndRemove({
+            _id: req.params.id,
+
+            _creator: req.user._id,
+        });
+
+        if (!post) throw new Error();
+
+        res.send({ post });
+
+    } catch (e) {
+
+        res.sendStatus(404);
+
+    }
+
+
+});
 
 
 module.exports = Router;

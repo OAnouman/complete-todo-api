@@ -345,3 +345,36 @@ describe('GET /posts/:id', () => {
     });
 
 });
+
+
+describe('DELETE /posts/:id', () => {
+
+    it('Should delete a post matching id', (done) => {
+
+        request(app)
+            .delete(`/posts/${posts[0]._id}`)
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .expect(res => {
+
+                expect(res.body.post._id).toBe(posts[0]._id.toHexString());
+
+            })
+            .end((err, res) => {
+
+                if (err) return done(err);
+
+                Post.find()
+                    .then(posts => {
+
+                        expect(posts.length).toBe(2);
+
+                        done();
+
+                    })
+
+            })
+
+    })
+
+});

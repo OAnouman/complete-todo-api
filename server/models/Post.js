@@ -105,7 +105,7 @@ PostSchema.methods.toJSON = function() {
 
     let post = this.toObject();
 
-    return _.pick(post, ['_id', 'title', 'body', 'lastModified', 'tags', 'createdAt'])
+    return _.pick(post, ['_id', 'title', 'body', 'lastModified', 'tags', 'createdAt', 'author'])
 
 }
 
