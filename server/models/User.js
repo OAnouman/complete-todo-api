@@ -127,19 +127,23 @@ UserSchema.methods.generateAuthToken = function() {
 
     let access = 'auth';
 
-    /* 
-     * Generate token with jsonwebtoken and
-     * push access and token into user's tokens
-     * array 
-     */
+    if (user.tokens.length === 0) {
 
-    let token = jwt.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET).toString();
+        /* 
+         * Generate token with jsonwebtoken and
+         * push access and token into user's tokens
+         * array 
+         */
 
-    user.tokens.push({ token, access });
+        let token = jwt.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET).toString();
 
-    // Save user and return a Promise.resolve 
-    return user.save()
-        .then(() => token);
+        user.tokens.push({ token, access });
+
+        // Save user and return a Promise.resolve 
+        return user.save()
+            .then(() => token);
+
+    }
 
 
 };
@@ -178,7 +182,7 @@ UserSchema.methods.toJSON = function() {
 
     // Return only specified property
 
-    return _.pick(user, ['_id', 'email', 'username', 'authToken']);
+    return _.pick(user, ['_id', 'email', 'username', 'tokens']);
 
 }
 
