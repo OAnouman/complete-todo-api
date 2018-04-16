@@ -133,14 +133,11 @@ UserSchema.methods.generateAuthToken = function() {
      * array 
      */
 
-    console.log('jwt');
     let token = jwt.sign({ _id: user._id.toHexString(), access }, process.env.JWT_SECRET).toString();
 
-    console.log('push');
     user.tokens.push({ token, access });
 
     // Save user and return a Promise.resolve 
-    console.log('re-save');
     return user.save()
         .then(() => token);
 
@@ -181,7 +178,7 @@ UserSchema.methods.toJSON = function() {
 
     // Return only specified property
 
-    return _.pick(user, ['_id', 'email', 'username']);
+    return _.pick(user, ['_id', 'email', 'username', 'authToken']);
 
 }
 
@@ -291,7 +288,6 @@ let preSaveHook = async function(next, done) {
             done(e);
 
         }
-
 
     } else {
 

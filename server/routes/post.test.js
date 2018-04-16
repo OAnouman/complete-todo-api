@@ -270,24 +270,9 @@ describe('GET /posts', () => {
             .expect(200)
             .expect(res => {
 
-                expect(res.body.posts.length).toBe(2);
+                expect(res.body.posts.length).toBe(3);
 
                 expect(res.body.posts[0].title).toBe(posts[0].title);
-
-            })
-            .end(done);
-
-    });
-
-    it('Should return a empty array if user as no post', (done) => {
-
-        request(app)
-            .get('/posts')
-            .set('x-auth', users[2].tokens[0].token)
-            .expect(200)
-            .expect(res => {
-
-                expect(res.body.posts.length).toBe(0);
 
             })
             .end(done);
@@ -320,16 +305,6 @@ describe('GET /posts/:id', () => {
                 expect(res.body.post.title).toBe(posts[0].title);
 
             })
-            .end(done);
-
-    });
-
-    it('Should return a 404 if user is not the owner of the requested post', (done) => {
-
-        request(app)
-            .get(`/posts/${posts[0]._id}`)
-            .set('x-auth', users[1].tokens[0].token)
-            .expect(404)
             .end(done);
 
     });

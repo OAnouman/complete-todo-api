@@ -61,7 +61,9 @@ Router.post('/', async(req, res) => {
 
         let token = await user.generateAuthToken();
 
-        res.header('x-auth', token).send({ user, token });
+        user.authToken = token;
+
+        res.header('x-auth', token).send({ user });
 
     } catch (e) {
 
@@ -93,7 +95,9 @@ Router.post('/login', async(req, res) => {
 
         let token = await user.generateAuthToken();
 
-        res.header('x-auth', token).send({ user, token });
+        user.authToken = token;
+
+        res.header('x-auth', token).send({ user });
 
     } catch (e) {
 

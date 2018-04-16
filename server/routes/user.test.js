@@ -31,7 +31,7 @@ beforeEach(populateUsers);
 
 describe('POST /users', () => {
 
-    it('Should create a user and add x-auth header', (done) => {
+    it('Should create a user with auth token and add x-auth header', (done) => {
 
 
         let user = {
@@ -48,6 +48,8 @@ describe('POST /users', () => {
             .expect(res => {
 
                 expect(res.headers['x-auth']).toExist();
+
+                expect(res.body.user.authToken).toNotBe(null);
 
             })
             .end((err, res) => {
